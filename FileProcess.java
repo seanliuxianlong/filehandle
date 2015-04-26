@@ -1,8 +1,11 @@
 package filehandle;
 
 import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
 
@@ -12,25 +15,7 @@ import java.io.IOException;
  * @date  April 25, 2015
  */
 public class FileProcess {
-	/*
-	 * The method is to Delete those space which is more than second space
-	 * 
-	 * @parameter String orginalString
-	 * @return String    formatString
-	 */
-    public static String DeleteMoreSpace(String originalString){
-        String formatString = "";	 
-    	for (int i = 0; i < originalString.length() - 1; i++) {
-            if ((int) originalString.charAt(i) == 32 && (int) originalString.charAt(i + 1) == 32) {
-    	    continue;
-    	   }
-    	   formatString += originalString.charAt(i);
-    	}
-    	if ((int) originalString.charAt(originalString.length() - 1) != 32)
-    	    formatString += originalString.charAt(originalString.length() - 1);
-    	    System.out.println("Formatted without more than two space string"+formatString);
-    	 return formatString;
-     }
+	
     
      /*
       * The method is to convert String[] to float and also calculate the summary of all. 
@@ -45,7 +30,7 @@ public class FileProcess {
             for(int i=0;i<arrays.length; i++){
             	System.out.println("original number is"+arrays[i]);
                 subTotal +=Float.parseFloat(arrays[i]);
-                System.out.println("subtotal is"+arrays[i]);
+                System.out.println("subtotal is"+subTotal);
             }
     	}
         catch(NumberFormatException e){
@@ -61,16 +46,16 @@ public class FileProcess {
     public static void handlerFile(String path){
     	try {
             // read file content from file
-            FileReader reader = new FileReader(path);
-            System.out.println("The file you want to processw is"+path);
-        
-            BufferedReader br = new BufferedReader(reader);
+
+    		File file = new File(path);   
+    		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));   
+    		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,"utf-8"),5*1024*1024);//use 5M buffer to read  
             String str = null;
             int count = 0;
             float total = 0;
-            while((str = br.readLine()) != null) {
+            while((str = reader.readLine()) != null) {
        	    //read one line and remove more space and convert them to String array
-            String [] stringArrays = DeleteMoreSpace(str).split(" ");
+            String [] stringArrays = str.split(" +");
             //calculate total summary of the stringArrays
             total += Sum(stringArrays);
             //calculate total number count of stringArrays
@@ -78,7 +63,7 @@ public class FileProcess {
             }
             System.out.println("Total count of those floats is"+count);
             System.out.println("Total summary of those floats is"+total);
-            br.close();
+            fis.close();
             reader.close();
         }
         catch(FileNotFoundException e) {
