@@ -20,22 +20,26 @@ public class FileProcess {
      /*
       * The method is to convert String[] to float and also calculate the summary of all. 
       *
-      * @parameter String[] arrays
-	  * @return float
+      * @parameter String[] arrays  The String array for those floats  
+	  * @return float the summation of all floats.
       * 
       */
-    public static float Sum(String[] arrays) throws NumberFormatException {
+    public static float Sum(String[] arrays) throws NumberFormatException,Exception {
         float subTotal=0;
     	try{
             for(int i=0;i<arrays.length; i++){
-            	System.out.println("original number is"+arrays[i]);
+            	System.out.println("original next number is"+arrays[i]);
                 subTotal +=Float.parseFloat(arrays[i]);
-                System.out.println("subtotal is"+subTotal);
+                if(subTotal>java.lang.Float.MAX_VALUE||subTotal<java.lang.Float.MIN_VALUE){
+                    throw new Exception("Float summation is overflow");
+                }
+                else{
+                	System.out.println("subtotal of numbers is"+subTotal);	
+                }
             }
     	}
         catch(NumberFormatException e){
         	throw e;
-        	
         }
         return subTotal;
      }
@@ -44,9 +48,9 @@ public class FileProcess {
      * @parameter String path The path of the file which is specified.
      */
     public static void handlerFile(String path){
+    	 
     	try {
             // read file content from file
-
     		File file = new File(path);   
     		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));   
     		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,"utf-8"),5*1024*1024);//use 5M buffer to read  
@@ -74,13 +78,16 @@ public class FileProcess {
         }
         catch(NumberFormatException e) {
             e.printStackTrace();
-        }	
+        }
+    	catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     
 	public static void main(String[] args) {
         if (args.length==0){
-            System.out.println("Please input your file name");
+            System.out.println("Please input your file name with full path");
         }
          
         else{
@@ -89,6 +96,7 @@ public class FileProcess {
         	//test cases2, include abnormal float. e.g. append English character, long float  
         	//handlerFile(args[0]);
         	//test cases3, include an empty file without any data
+        	//test cases4, a big file with so many float
         }         
     }
 }
