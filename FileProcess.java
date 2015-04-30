@@ -46,8 +46,9 @@ public class FileProcess {
     /*
      * handler the file which is specified. 
      * @parameter String path The path of the file which is specified.
+     * @retur String total number and sum of total nubmer
      */
-    public static void handlerFile(String path){
+    public static String handlerFile(String path){
     	 
     	try {
             // read file content from file
@@ -65,22 +66,29 @@ public class FileProcess {
             //calculate total number count of stringArrays
             count +=stringArrays.length;
             }
-            System.out.println("Total count of those floats is"+count);
-            System.out.println("Total summary of those floats is"+total);
+            String result ="Total count of those floats is"+count+"Total summary of those floats is"+total; 
+            
+            System.out.println(result);
             fis.close();
             reader.close();
+            return result;
         }
         catch(FileNotFoundException e) {
-              e.printStackTrace();
+            e.printStackTrace();
+            return "-1";
         }
         catch(IOException e) {
-              e.printStackTrace();
+            e.printStackTrace();
+            return "-1";
         }
         catch(NumberFormatException e) {
             e.printStackTrace();
+            System.out.println("-1");
+            return "-1";
         }
     	catch(Exception e) {
             e.printStackTrace();
+            return "-1";
         }
     }
 
